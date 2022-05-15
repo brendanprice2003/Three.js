@@ -1,8 +1,8 @@
 import './assets/style/style.css';
-import { Initialize } from './assets/scripts/utils/Init';
+import { Initialize, camera } from './assets/scripts/utils/Init';
 import { AddLighting } from './assets/scripts/utils/Lighting';
-import { AddStar, AnimateScene } from './assets/scripts/utils/Effects';
-
+import { AddStar } from './assets/scripts/utils/Effects';
+import { userStruct } from './assets/scripts/user';
 
 // Initialize the scene
 Initialize();
@@ -12,4 +12,11 @@ AddLighting();
 
 // Initialize effects
 Array(200).fill().forEach(AddStar);
-AnimateScene();
+
+// Events
+setInterval(() => {
+    userStruct.isAnimationPlaying = false;
+    document.getElementById('canvasCoverAnimation').style.display = 'block';
+    camera.position.z = 0;
+    document.getElementById('canvasCoverAnimation').style.display = 'none';
+}, 5000);

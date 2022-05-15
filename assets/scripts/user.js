@@ -24,6 +24,7 @@ var urlParams = new URLSearchParams(window.location.search),
 // Configure userStruct
 userStruct.objs = {};
 userStruct.objs.currView = document.getElementById('user'); // Default
+userStruct.isAnimationPlaying = false; // Toggle for pausing/playing animation
 
 
 // OAuth 2.0 flow
@@ -178,9 +179,6 @@ const LoadContent = async () => {
 
     // Get user information
     let UserInformation = await axios.get(`https://api.spotify.com/v1/me`, headerData);
-    document.getElementById('btnUser').innerHTML = `${UserInformation.data.display_name}`;
-    document.getElementById('userName').innerHTML = `${UserInformation.data.display_name}`;
-    document.getElementById('userFollowers').innerHTML = `${UserInformation.data.followers.total} ${document.getElementById('userFollowers').innerHTML}`;
 
     if (UserInformation.data.images[0].url) {
         let navBarIcon = document.getElementById('navBarIcon');
@@ -194,6 +192,12 @@ const LoadContent = async () => {
     // Get user playlists
     let UserPlaylists = await axios.get(`https://api.spotify.com/v1/users/${userStruct.CurrentUserProfile.id}/playlists`, headerData);
     userStruct.userPlaylists = UserPlaylists.data;
+
+    // Change DOM elements
+    document.getElementById('btnUser').innerHTML = `${UserInformation.data.display_name}`;
+    document.getElementById('userName').innerHTML = `${UserInformation.data.display_name}`;
+    document.getElementById('userFollowers').innerHTML = `${UserInformation.data.followers.total} ${document.getElementById('userFollowers').innerHTML}`;
+    document.getElementById('userPlaylists').innerHTML = `${UserPlaylists.data.items.length} ${document.getElementById('userPlaylists').innerHTML}`;
     
     let ArtistAffinity = await axios.get(`https://api.spotify.com/v1/me/top/artists`, headerData),
         TracksAffinity = await axios.get(`https://api.spotify.com/v1/me/top/tracks`, headerData);
@@ -215,7 +219,7 @@ const LoadContent = async () => {
             document.querySelector('#items').appendChild(trackImage);
     };
 
-    // Create new element for each album
+    // Create new element for each user playlist
     for (let item of UserPlaylists.data.items) {
 
         let albumImageForMoodBoard = document.createElement('img');

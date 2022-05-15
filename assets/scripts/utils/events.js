@@ -1,3 +1,4 @@
+import { AnimateScene } from './Effects';
 import { userStruct, baseUri  } from '../user.js';
 
 var log = console.log.bind(console);
@@ -8,25 +9,44 @@ const InitializeEvents = () => {
     document.getElementById('moodBoard').style.display = 'none';
     userStruct.objs.currView.style.display = 'block';
 
+    document.getElementById('canvasCoverAnimation').style.width = window.innerWidth;
+    document.getElementById('canvasCoverAnimation').style.height = window.innerHeight;
+
     document.getElementById('btnMoodBoard').addEventListener('click', () => {
+
         userStruct.objs.currView.style.display = 'none';
-        document.getElementById('moodBoard').style.display = 'block';
-        userStruct.objs.currView = document.getElementById('moodBoard');
+        let element = document.getElementById('moodBoard');
+            element.style.display = 'block';
+            userStruct.objs.currView = element;
+            userStruct.isAnimationPlaying = true;
+            AnimateScene();
     });
+
     document.getElementById('btnPlaylists').addEventListener('click', () => {
+
         userStruct.objs.currView.style.display = 'none';
-        document.getElementById('playlists').style.display = 'block';
-        userStruct.objs.currView = document.getElementById('playlists');
+        let element = document.getElementById('playlists');
+            element.style.display = 'block';
+            userStruct.objs.currView = element;
+            userStruct.isAnimationPlaying = false;
     });
+
     document.getElementById('btnUser').addEventListener('click', () => {
+
         userStruct.objs.currView.style.display = 'none';
-        document.getElementById('user').style.display = 'block';
-        userStruct.objs.currView = document.getElementById('user');
+        let element = document.getElementById('user');
+            element.style.display = 'block';
+            userStruct.objs.currView = element;
+            userStruct.isAnimationPlaying = false;
     });
+
     document.getElementById('settingsIcon').addEventListener('click', () => {
+
         userStruct.objs.currView.style.display = 'none';
-        document.getElementById('settings').style.display = 'block';
-        userStruct.objs.currView = document.getElementById('settings');
+        let element = document.getElementById('settings');
+            element.style.display = 'block';
+            userStruct.objs.currView = element;
+            userStruct.isAnimationPlaying = false;
     });
 
     document.getElementById('navBarLogoutContainer').addEventListener('click', () => {

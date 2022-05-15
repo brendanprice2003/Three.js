@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { scene, camera, renderer } from './Init';
+import { userStruct } from '../user';
 
 var geometry,
     material,
@@ -9,7 +10,7 @@ var geometry,
 const AddStar = () => {
 
     geometry = new THREE.SphereGeometry(0.06, 5, 5);
-    material = new THREE.MeshStandardMaterial({color: 0xffffff});
+    material = new THREE.MeshStandardMaterial({color: 0x55555});
     mesh = new THREE.Mesh(geometry, material);
     
     let [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
@@ -20,8 +21,10 @@ const AddStar = () => {
 
 // Recursive functions
 const AnimateScene = () => {
+    if (!userStruct.isAnimationPlaying) return;
 
     requestAnimationFrame(AnimateScene);
+
     camera.position.z -= 0.0125;
     renderer.render(scene, camera);
 };

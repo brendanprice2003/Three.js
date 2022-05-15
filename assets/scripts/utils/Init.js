@@ -18,7 +18,7 @@ const Initialize = () => {
 
     // Create WebGL renderer
     renderer = new THREE.WebGLRenderer({
-        canvas: document.getElementById('userBgThreeAnimation')
+        canvas: document.querySelector('#userBgThreeAnimation')
     });
 
     // General props

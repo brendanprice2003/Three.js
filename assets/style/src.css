@@ -70,7 +70,7 @@
 #navBarLogoutContainer {
     position: absolute;
     display: inline-block;
-    margin-top: 17px;
+    margin-top: 11px;
     right: 1%;
     cursor: pointer;
 }
@@ -97,7 +97,7 @@
     transition: 0.25s;
 }
 .navBarIconAnim {
-    animation: LoadAnim 1.5s ease 0s infinite normal none;
+    animation: LoadAnim 1.5s ease 0s 1 normal none;
     transition: all 0s;
 }
 #navBarButtonsContainer {
