@@ -1,4 +1,4 @@
-import { THREE } from '../../../main';
+import * as THREE from 'three';
 
 var scene,
     camera,
@@ -18,12 +18,11 @@ const Initialize = () => {
 
     // Create WebGL renderer
     renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector('#bg'),
-        antialias: true
+        canvas: document.getElementById('userBgThreeAnimation')
     });
 
     // General props
-    scene.background = new THREE.Color(0x212b3b);
+    scene.background = new THREE.Color(0x22272e);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.position.setZ(30);
@@ -32,7 +31,7 @@ const Initialize = () => {
     renderer.render(scene, camera);
 };
 
-export { 
+export {
     Initialize,
     scene,
     camera,

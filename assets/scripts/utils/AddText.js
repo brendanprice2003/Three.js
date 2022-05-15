@@ -1,23 +1,24 @@
-import { THREE, FontLoader, TextGeometry } from '../../../main';
+import * as THREE from 'three';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { scene } from './Init';
 
 let fontLoader = new FontLoader(),
     leftIndex = 18,
-    rightIndex = 18,
-    log = console.log.bind(console);
+    rightIndex = 18;
 
 // Generate random integer between range
-var randInt = (min, max) => {
+const randInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
 // Add text to the scene
 const AddText = (text, s) => {
 
-    fontLoader.load('www/fonts/font.json', (font) => {
+    fontLoader.load('../assets/fonts/font.json', (loadedFont) => {
 
         let textGeom = new TextGeometry(`${text}`, {
-            font: font,
+            font: loadedFont,
             size: 0.75,
             height: 0
         });

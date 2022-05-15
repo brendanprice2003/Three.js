@@ -1,4 +1,4 @@
-import { THREE } from '../../../main';
+import * as THREE from 'three';
 import { scene, camera, renderer } from './Init';
 
 var geometry,

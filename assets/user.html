@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="ico/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" href="style/src.css">
+    <link rel="stylesheet" href="style/user.css">
+
+    <link rel="shortcut icon" href="#">
+    <title>Spotify Web API</title>
+</head>
+
+<body>
+    <div id="navBarContainer">
+        <div id="navBarIconContainer">
+            <img id="navBarIcon" src="ico/logo.png">
+        </div>
+
+        <div id="navBarButtonsContainer">
+            <div id="btnMoodBoard">
+                MoodBoard
+            </div>
+            <div id="btnPlaylists">
+                Playlists
+            </div>
+            <div id="btnUser">
+                User
+            </div>
+            <img id="settingsIcon" src="ico/settings.png">
+        </div>
+
+        <div id="navBarLogoutContainer">
+            <div id="navBarLogout">Log Out</div>
+        </div>
+    </div>
+
+    <div id="mainContainer">
+        <div id="moodBoard">
+            <canvas id="userBgThreeAnimation"></canvas>
+            <div id="items"></div>
+        </div>
+        <div id="playlists">
+            <div id="playlistGrid"></div>
+            <div id="playlistContent"></div>
+        </div>
+        <div id="user">
+            <img id="userPfp">
+            <div id="profileText">PROFILE</div>
+            <div id="userName"></div>
+            <div id="userStatsContainer">
+                <div id="userPlaylists">7 Playlists • </div>
+                <div id="userFollowers">Followers • </div>
+                <div id="userFollowing">7 Following</div>
+            </div>
+            <div id="warningMessage">
+                <img id="warningMessageIcon" src="./ico/warning.png">
+                <div id="warningMessageContent">
+					This website takes significantly longer to load if you do not have hardware acceleration enabled in your browser.
+				</div>
+            </div>
+        </div>
+        <div id="settings">
+
+        </div>
+    </div>
+</body>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="module" src="scripts/utils/browser.js"></script>
+<script type="module" src="../main.js"></script>

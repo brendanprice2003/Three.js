@@ -1,4 +1,4 @@
-import { THREE } from '../../../main';
+import * as THREE from 'three';
 import { scene } from './Init';
 
 var pointLight,
@@ -14,7 +14,5 @@ const AddLighting = () => {
 };
 
 export { 
-    AddLighting,
-    pointLight,
-    ambientLight
+    AddLighting
 };
