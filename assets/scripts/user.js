@@ -10,10 +10,10 @@ import { UpdatePlaybackItem } from './utils/Helpers';
 // Globals
 var log = console.log.bind(console),
     authCode,
-    clientId = '359dc43494fd4bdca5532550348fbb35',
-    clientSecret = '55ce32e7350c46ae8ffcc0fd51b1f78d',
-    redirectUri = `http://127.0.0.1:3000/assets/user.html`,
-    baseUri = `http://127.0.0.1:3000/`;
+    clientId = '27396f5c152d4bf2b82503891c30f266',
+    clientSecret = '33631337010645be9231764cc947ac29',
+    redirectUri = `https://spotify.brendanprice.xyz/assets/user.html`,
+    baseUri = `https://spotify.brendanprice.xyz/`;
 
 var urlParams = new URLSearchParams(window.location.search),
     navbarIcon = document.getElementById('navBarIcon'),
