@@ -25,6 +25,7 @@ var urlParams = new URLSearchParams(window.location.search),
 userStruct.objs = {};
 userStruct.objs.currView = document.getElementById('user'); // Default
 userStruct.isAnimationPlaying = false; // Toggle for pausing/playing animation
+userStruct.playbackRefreshInterval = 2000; // Interval for refreshing user playback in ms
 
 
 // OAuth 2.0 flow
@@ -155,12 +156,22 @@ const LoadUser = async (authCode) => {
             }
         };
         
-    const CurrentUserProfile = await axios.get('https://api.spotify.com/v1/me', headerData);
-    userStruct.CurrentUserProfile = CurrentUserProfile.data;
+    userStruct.CurrentUserProfile = await axios.get('https://api.spotify.com/v1/me', headerData);
 
-    // const UserProfile = await axios.get(`https://api.spotify.com/v1/users/${CurrentUserProfile.data.userId}`, headerData);
-    // userStruct.UserProfile = UserProfile.data;
-    // log(UserProfile.data);
+    let currentItemName = document.getElementById('currPlayingItemName'),
+        currentAristInfo = document.getElementById('currPlayingItemAuthor');
+
+    setInterval( async () => {
+
+        let UserCurrentPlayback = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', headerData),
+            data = UserCurrentPlayback.data.item;
+
+        currentItemName.innerHTML = '';
+        currentAristInfo.innerHTML = '';
+        currentItemName.innerHTML = `${data.name}`;
+        currentAristInfo.innerHTML = `${data.artists[0].name}`;
+
+    }, userStruct.playbackRefreshInterval);
 
     LoadContent(authCode);
 };

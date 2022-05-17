@@ -14,9 +14,9 @@ AddLighting();
 Array(200).fill().forEach(AddStar);
 
 // Events
-setInterval(() => {
-    userStruct.isAnimationPlaying = false;
-    document.getElementById('canvasCoverAnimation').style.display = 'block';
-    camera.position.z = 0;
-    document.getElementById('canvasCoverAnimation').style.display = 'none';
-}, 5000);
+// setInterval(() => {
+//     userStruct.isAnimationPlaying = false;
+//     document.getElementById('canvasCoverAnimation').style.display = 'block';
+//     camera.position.z = 0;
+//     document.getElementById('canvasCoverAnimation').style.display = 'none';
+// }, 5000);

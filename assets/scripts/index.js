@@ -28,7 +28,7 @@ document.getElementById('btnAuthorize').addEventListener('click', () => {
     var state = GenerateState(16);
 
     localStorage.setItem('stateKey', state);
-    var scope = 'user-read-private user-read-email user-top-read';
+    var scope = 'user-read-private user-read-email user-top-read user-read-currently-playing';
 
     url += '?response_type=code';
     url += '&client_id=' + encodeURIComponent(clientId);
