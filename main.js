@@ -1,7 +1,7 @@
 import './assets/style/style.css';
-import { Initialize, camera } from './assets/scripts/utils/Init';
-import { AddLighting } from './assets/scripts/utils/Lighting';
-import { AddStar } from './assets/scripts/utils/Effects';
+import { Initialize, camera } from './assets/scripts/utils/Init.js';
+import { AddLighting } from './assets/scripts/utils/Lighting.js';
+import { AddStar } from './assets/scripts/utils/Effects.js';
 // import { userStruct } from './assets/scripts/user';
 
 // Initialize the scene
