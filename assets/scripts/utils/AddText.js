@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { scene } from './Init';
+import { userStruct } from '../user';
 
 let fontLoader = new FontLoader(),
     leftIndex = 18,
@@ -19,7 +20,7 @@ const AddText = (text, s) => {
 
         let textGeom = new TextGeometry(`${text}`, {
             font: loadedFont,
-            size: 0.75,
+            size: JSON.parse(localStorage.getItem('userSettings')).moodboardItemSize || 0.75,
             height: 0
         });
       

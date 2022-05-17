@@ -2,7 +2,7 @@ import './assets/style/style.css';
 import { Initialize, camera } from './assets/scripts/utils/Init';
 import { AddLighting } from './assets/scripts/utils/Lighting';
 import { AddStar } from './assets/scripts/utils/Effects';
-import { userStruct } from './assets/scripts/user';
+// import { userStruct } from './assets/scripts/user';
 
 // Initialize the scene
 Initialize();

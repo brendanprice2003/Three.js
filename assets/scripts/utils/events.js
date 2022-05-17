@@ -55,6 +55,19 @@ const InitializeEvents = () => {
         window.location.href = baseUri;
     });
 
+    document.getElementById('submitButton').addEventListener('click', () => {
+
+        // Omits strings
+        let value = document.getElementById('size').value;
+        if (Number.isInteger(parseInt(value))) {
+            let userSettings = JSON.parse(localStorage.getItem('userSettings'));
+                userSettings.moodboardItemSize = parseFloat(value);
+                localStorage.setItem('userSettings', JSON.stringify(userSettings));
+            window.location.reload();
+        };
+
+    });
+
 };
 
 export { InitializeEvents };

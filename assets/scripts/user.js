@@ -3,8 +3,9 @@ console.log('%cSpotify Web API _V0.1', 'font-weight: bold;font-size: 25px;color:
 console.log('// Welcome to Spotify Web API, Please report any errors to @beru2003 on Twitter.');
 
 // ES6 Imports
-import { InitializeEvents } from './utils/events';
+import { InitializeEvents } from './utils/Events';
 import { AddText } from './utils/AddText';
+import { UpdatePlaybackItem } from './utils/Helpers';
 
 // Globals
 var log = console.log.bind(console),
@@ -25,7 +26,19 @@ var urlParams = new URLSearchParams(window.location.search),
 userStruct.objs = {};
 userStruct.objs.currView = document.getElementById('user'); // Default
 userStruct.isAnimationPlaying = false; // Toggle for pausing/playing animation
-userStruct.playbackRefreshInterval = 2000; // Interval for refreshing user playback in ms
+userStruct.playbackRefreshInterval = 3000; // Interval for refreshing user playback in ms
+
+// Check if userSettings exist, if false then apply defaults
+if (localStorage.getItem('userSettings')) {
+    document.getElementById('size').value = JSON.parse(localStorage.getItem('userSettings')).moodboardItemSize;
+}
+else {
+    var userSettings = {
+        moodboardItemSize: 0.75, // Size of item names on the moodboard
+    };
+    localStorage.setItem('userSettings', JSON.stringify(userSettings));
+    document.getElementById('size').value = userSettings.moodboardItemSize;
+};
 
 
 // OAuth 2.0 flow
@@ -36,6 +49,7 @@ const OAuthFlow = async () => {
         comps = JSON.parse(localStorage.getItem('components'));
     
         // ONLY place where authCode is to be fetched from
+        let settingsConf = urlParams.get('fname');
         authCode = urlParams.get('code');
 
         // Clean URL
@@ -44,8 +58,15 @@ const OAuthFlow = async () => {
     // Wrap in try.except for error catching
     try {
 
+        // If user has entered in setting config
+        if (settingsConf) {
+            var userSettings = JSON.parse(localStorage.getItem('userSettings'));
+                userSettings.moodboardItemSize = settingsConf;
+                localStorage.setItem('userSettings', JSON.stringify(userSettings));
+        }
+
         // User comes back that has authorized beforehand
-        if (!authCode && (rsToken && acToken && comps)) {
+        else if (!authCode && (rsToken && acToken && comps)) {
             await CheckComponents();
         }
 
@@ -158,18 +179,13 @@ const LoadUser = async (authCode) => {
         
     userStruct.CurrentUserProfile = await axios.get('https://api.spotify.com/v1/me', headerData);
 
-    let currentItemName = document.getElementById('currPlayingItemName'),
-        currentAristInfo = document.getElementById('currPlayingItemAuthor');
+    // First pass on user load
+    UpdatePlaybackItem(headerData);
 
+    // Tailing function calls on intervals
     setInterval( async () => {
 
-        let UserCurrentPlayback = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', headerData),
-            data = UserCurrentPlayback.data.item;
-
-        currentItemName.innerHTML = '';
-        currentAristInfo.innerHTML = '';
-        currentItemName.innerHTML = `${data.name}`;
-        currentAristInfo.innerHTML = `${data.artists[0].name}`;
+        UpdatePlaybackItem(headerData);
 
     }, userStruct.playbackRefreshInterval);
 

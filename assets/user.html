@@ -52,8 +52,8 @@
             <div id="currPlayingSubContainer">
                 <img id="currPlayingIcon" src="./ico/currPlaying.png">
                 <div id="currPlayingContainer">
-                    <div id="currPlayingItemName">EMPTY DREAMS</div>
-                    <div id="currPlayingItemAuthor">CYAPRISS</div>
+                    <div id="currPlayingItemName"></div>
+                    <div id="currPlayingItemAuthor"></div>
                 </div>
             </div>
 
@@ -71,12 +71,17 @@
             </div>
         </div>
         <div id="settings">
-
+            <div id="settingConfig1">
+                <div id="settingHeading1">MoodBoard Heading Size:</div>
+                <input type="text" id="size" name="size"><br>
+                <button id="submitButton">SUBMIT</button>
+                <div id="settingDesc1">Change the size of each items' text on the 3D-animated moodboard.</div>
+                <div id="settingDesc1">Note: This setting requires a window refresh for changes to take place.</div>
+            </div>
         </div>
     </div>
 </body>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<!-- <script type="module" src="scripts/utils/browser.js"></script> -->
 <script type="module" src="../main.js"></script>
