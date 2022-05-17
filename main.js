@@ -1,4 +1,4 @@
-// import './assets/style/style.css';
+import './assets/style/style.css';
 import { Initialize, camera } from './assets/scripts/utils/Init.js';
 import { AddLighting } from './assets/scripts/utils/Lighting.js';
 import { AddStar } from './assets/scripts/utils/Effects.js';
