@@ -5,7 +5,8 @@ console.log('// Welcome to Spotify Web API, Please report any errors to @beru200
 // ES6 Imports
 import { InitializeEvents } from './utils/Events';
 import { AddText } from './utils/AddText';
-import { UpdatePlaybackItem } from './utils/Helpers';
+import { UpdatePlaybackItem, PauseMusic } from './utils/Helpers';
+import { LOD } from 'three';
 
 // Globals
 var log = console.log.bind(console),
@@ -185,6 +186,7 @@ const LoadUser = async (authCode) => {
     // Tailing function calls on intervals
     setInterval( async () => {
 
+        await CheckComponents();
         UpdatePlaybackItem(headerData);
 
     }, userStruct.playbackRefreshInterval);
@@ -217,14 +219,18 @@ const LoadContent = async () => {
     };
 
     // Get user playlists
-    let UserPlaylists = await axios.get(`https://api.spotify.com/v1/users/${userStruct.CurrentUserProfile.id}/playlists`, headerData);
-    userStruct.userPlaylists = UserPlaylists.data;
+    let UserPlaylists = await axios.get(`https://api.spotify.com/v1/me/playlists?limit=50&offset=0`, headerData),
+        UserAlbums = await axios.get(`https://api.spotify.com/v1/me/albums?limit=50&market=GB&offset=0`, headerData),
+        userItemCounter = 0;
 
-    // Change DOM elements
+    userItemCounter += UserPlaylists.data.items.length;
+    userItemCounter += UserAlbums.data.items.filter(v => v.album.album_type === 'album' ? 1 : 0).length;
+
+    // Change DOM elements on load
     document.getElementById('btnUser').innerHTML = `${UserInformation.data.display_name}`;
     document.getElementById('userName').innerHTML = `${UserInformation.data.display_name}`;
     document.getElementById('userFollowers').innerHTML = `${UserInformation.data.followers.total} ${document.getElementById('userFollowers').innerHTML}`;
-    document.getElementById('userPlaylists').innerHTML = `${UserPlaylists.data.items.length} ${document.getElementById('userPlaylists').innerHTML}`;
+    document.getElementById('userPlaylists').innerHTML = `${userItemCounter} ${document.getElementById('userPlaylists').innerHTML}`;
     
     let ArtistAffinity = await axios.get(`https://api.spotify.com/v1/me/top/artists`, headerData),
         TracksAffinity = await axios.get(`https://api.spotify.com/v1/me/top/tracks`, headerData);
@@ -244,6 +250,26 @@ const LoadContent = async () => {
             trackImage.id = 'item';
             trackImage.src = AffinityTrack.album.images[0].url;
             document.querySelector('#items').appendChild(trackImage);
+    };
+
+    // Create new element for each user album
+    for (let item of UserAlbums.data.items) {
+        if (item.album.album_type == 'album') {
+            
+            let albumImageForMoodBoard = document.createElement('img');
+                albumImageForMoodBoard.id = 'item';
+                albumImageForMoodBoard.src = item.album.images[0].url;
+                document.querySelector(`#items`).appendChild(albumImageForMoodBoard);
+
+            let albumImageForPlaylists = document.createElement('img');
+                albumImageForPlaylists.id = 'playlist';
+                albumImageForPlaylists.src = item.album.images[0].url;
+                document.querySelector(`#playlistGrid`).appendChild(albumImageForPlaylists);
+                albumImageForPlaylists.addEventListener('click', () => {
+                    LoadPlaylistContent(item.album, headerData);
+                });
+
+        };
     };
 
     // Create new element for each user playlist
@@ -266,6 +292,10 @@ const LoadContent = async () => {
     setTimeout(() => {
         navbarIcon.classList.remove('navBarIconAnim'); // Stop loadig animation
     }, 1200);
+
+    document.getElementById('btnPauseMusic').addEventListener('click', () => {
+        PauseMusic(headerData);
+    });
 };
 
 
@@ -279,9 +309,9 @@ const LoadPlaylistContent = async (playlist, headerData) => {
     // Get the playlist
     let PlaylistTracks = await axios.get(`${playlist.tracks.href}`, headerData),
         rt = PlaylistTracks.data.items;
-
+        
     for (let item in rt) {
-
+        log(rt[item].duration_ms/1000/60);
         let topSeperator = document.createElement('hr'),
             track = document.createElement('div'),
             trackArtist = document.createElement('div');
@@ -290,9 +320,9 @@ const LoadPlaylistContent = async (playlist, headerData) => {
 
         trackArtist.id = 'trackArtist';
         track.id = 'track';
-        track.innerHTML = rt[item].track.name;
+        track.innerHTML = rt[item].name || rt[item].track.name;
 
-        for (let artist of rt[item].track.artists) {
+        for (let artist of  rt[item].artists || rt[item].track.artists) {
             if (!trackArtist.innerHTML) {
                 trackArtist.innerHTML += artist.name;
             }

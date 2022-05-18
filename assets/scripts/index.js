@@ -28,7 +28,26 @@ document.getElementById('btnAuthorize').addEventListener('click', () => {
     var state = GenerateState(16);
 
     localStorage.setItem('stateKey', state);
-    var scope = 'user-read-private user-read-email user-top-read user-read-currently-playing';
+    var scope = '',
+        scopesArr = [
+            'user-read-playback-state',
+            'user-read-email',
+            'user-read-private',
+            'user-top-read',
+            'user-read-currently-playing',
+            'user-library-read',
+            'user-modify-playback-state'
+        ];
+    
+    for (let i=0; i < scopesArr.length; i++) {
+
+        if (i === 0) {
+            scope += scopesArr[i];
+        }
+        else {
+            scope += ` ${scopesArr[i]}`;
+        };
+    };
 
     url += '?response_type=code';
     url += '&client_id=' + encodeURIComponent(clientId);
