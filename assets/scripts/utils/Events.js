@@ -9,9 +9,6 @@ const InitializeEvents = () => {
     document.getElementById('moodBoard').style.display = 'none';
     userStruct.objs.currView.style.display = 'block';
 
-    document.getElementById('canvasCoverAnimation').style.width = window.innerWidth;
-    document.getElementById('canvasCoverAnimation').style.height = window.innerHeight;
-
     document.getElementById('btnMoodBoard').addEventListener('click', () => {
 
         userStruct.objs.currView.style.display = 'none';
@@ -20,6 +17,9 @@ const InitializeEvents = () => {
             userStruct.objs.currView = element;
             userStruct.isAnimationPlaying = true;
             AnimateScene();
+
+        document.getElementById('playlistGrid').style.display = 'block';
+        document.getElementById('playlistContent').style.display = 'none';
     });
 
     document.getElementById('btnPlaylists').addEventListener('click', () => {
@@ -29,6 +29,21 @@ const InitializeEvents = () => {
             element.style.display = 'block';
             userStruct.objs.currView = element;
             userStruct.isAnimationPlaying = false;
+
+        document.getElementById('playlistGrid').style.display = 'block';
+        document.getElementById('playlistContent').style.display = 'none';
+    });
+
+    document.getElementById('btnPlayer').addEventListener('click', () => {
+
+        userStruct.objs.currView.style.display = 'none';
+        let element = document.getElementById('player');
+            element.style.display = 'block';
+            userStruct.objs.currView = element;
+            userStruct.isAnimationPlaying = false;
+
+        document.getElementById('playlistGrid').style.display = 'block';
+        document.getElementById('playlistContent').style.display = 'none';
     });
 
     document.getElementById('btnUser').addEventListener('click', () => {
@@ -38,6 +53,9 @@ const InitializeEvents = () => {
             element.style.display = 'block';
             userStruct.objs.currView = element;
             userStruct.isAnimationPlaying = false;
+
+        document.getElementById('playlistGrid').style.display = 'block';
+        document.getElementById('playlistContent').style.display = 'none';
     });
 
     document.getElementById('settingsIcon').addEventListener('click', () => {
@@ -47,9 +65,13 @@ const InitializeEvents = () => {
             element.style.display = 'block';
             userStruct.objs.currView = element;
             userStruct.isAnimationPlaying = false;
+
+        document.getElementById('playlistGrid').style.display = 'block';
+        document.getElementById('playlistContent').style.display = 'none';
     });
 
     document.getElementById('navBarLogoutContainer').addEventListener('click', () => {
+
         localStorage.clear();
         sessionStorage.clear();
         window.location.href = baseUri;

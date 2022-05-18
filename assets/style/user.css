@@ -64,13 +64,16 @@
 }
 
 #moodBoard {
-    display: block;
+    display: none;
 }
 #playlists {
     display: none;
 }
-#user {
+#player {
     display: none;
+}
+#user {
+    display: block;
 }
 #settings {
     display: none;
