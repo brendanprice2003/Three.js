@@ -134,51 +134,6 @@
     transition: 0.25s;
 }
 
-
-/* Loadbar */
-#loadBarContainer {
-    display: inline-block;
-    position: fixed;
-    margin-top: 56px;
-}
-#slider{
-    position: absolute;
-    margin-top: -21px;
-    margin-left: -10px;
-    width: 103vw;
-    height: 3px;
-    overflow-x: hidden;
-}
-.line{
-    position: absolute;
-    width: 103vw;
-    height: 5px;
-    background: #4a8df8;
-    opacity: 0.4;
-    overflow-x: hidden;
-}
-.subline{
-    position: absolute;
-    height: 5px;
-    background: #4a8df8;
-    overflow-x: hidden;
-}
-.inc{
-    animation: increase 2s infinite;
-}
-.dec{
-    animation: decrease 2s 0.5s infinite;
-}
-@keyframes increase {
-    from { left: -5%; width: 5%; }
-    to { left: 130%; width: 100%; }
-}
-@keyframes decrease {
-    from { left: -80%; width: 80%; }
-    to { left: 110%; width: 10%; }
-}
-
-
 /* Onload Animation */
 .fade-in {
     animation-name: FadeIn;
