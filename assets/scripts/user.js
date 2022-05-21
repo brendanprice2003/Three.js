@@ -5,16 +5,15 @@ console.log('// Welcome to Spotify Web API, Please report any errors to @beru200
 // ES6 Imports
 import { InitializeEvents } from './utils/Events';
 import { AddText } from './utils/AddText';
-import { UpdatePlaybackItem, PauseMusic } from './utils/Helpers';
-import { LOD } from 'three';
+import { UpdatePlaybackItem } from './utils/Helpers';
 
 // Globals
 var log = console.log.bind(console),
     authCode,
-    clientId = '27396f5c152d4bf2b82503891c30f266',
-    clientSecret = '33631337010645be9231764cc947ac29',
-    redirectUri = `https://spotify.brendanprice.xyz/assets/user.html`,
-    baseUri = `https://spotify.brendanprice.xyz/`;
+    clientId = '359dc43494fd4bdca5532550348fbb35',
+    clientSecret = '55ce32e7350c46ae8ffcc0fd51b1f78d',
+    redirectUri = `http://127.0.0.1:3000/assets/user.html`,
+    baseUri = `http://127.0.0.1:3000/`;
 
 var urlParams = new URLSearchParams(window.location.search),
     navbarIcon = document.getElementById('navBarIcon'),
@@ -27,7 +26,7 @@ var urlParams = new URLSearchParams(window.location.search),
 userStruct.objs = {};
 userStruct.objs.currView = document.getElementById('user'); // Default
 userStruct.isAnimationPlaying = false; // Toggle for pausing/playing animation
-userStruct.playbackRefreshInterval = 3000; // Interval for refreshing user playback in ms
+userStruct.playbackRefreshInterval = 3500; // Interval for refreshing user playback in ms
 
 // Check if userSettings exist, if false then apply defaults
 if (localStorage.getItem('userSettings')) {
@@ -135,9 +134,7 @@ const AuthorizeUser = async (authCode) => {
 // Check user components to see if they are invalid or out of date
 const CheckComponents = async () => {
 
-    var acToken = JSON.parse(localStorage.getItem('accessToken')),
-        rsToken = JSON.parse(localStorage.getItem('refreshToken')),
-        comps = JSON.parse(localStorage.getItem('components')),
+    let acToken = JSON.parse(localStorage.getItem('accessToken')),
         headerData = {
             headers: {
                 Authorization: `Basic ${btoa(clientId + ':' + clientSecret)}`,
@@ -145,24 +142,36 @@ const CheckComponents = async () => {
             }
         };
 
-    // Check if either tokens have expired
-    var isAcTokenExpired = (acToken.inception + acToken['expires_in']) <= Math.round(new Date().getTime());
+    // Check if access token has expired
+    let isAcTokenExpired = (acToken.inception + acToken['expires_in']) <= Math.round(new Date().getTime() / 1000) - 1;
     if (isAcTokenExpired) {
+
+        log('-> Refreshing User Components..');
+
+        var rsToken = JSON.parse(localStorage.getItem('refreshToken')),
+            comps = JSON.parse(localStorage.getItem('components'));
 
         // Refresh access token
         await axios.post('https://accounts.spotify.com/api/token', `grant_type=refresh_token&refresh_token=${rsToken.value}`, headerData)
         .then(res => {
 
-            acToken['expires_in'] = res.data['expires_in'];
-            acToken.value = res.data['access_token'];
-            acToken.inception = new Date().getTime();
+            let rt = res.data; // Make it slightly quicker
+            acToken = {
+                expires_in: rt['expires_in'],
+                value: rt['access_token'],
+                inception: new Date().getTime(),
+            };
 
-            comps['token_type'] = res.data['token_type'];
-            comps.scope = res.data.scope;
+            comps = {
+                token_type: rt['token_type'],
+                scope: rt.scope,
+            };
 
             localStorage.setItem('accessToken', JSON.stringify(acToken));
             localStorage.setItem('components', JSON.stringify(comps));
         });
+
+        log('-> User Components Refreshed');
     };
 };
 
@@ -170,15 +179,24 @@ const CheckComponents = async () => {
 // Load basic user information
 const LoadUser = async (authCode) => {
 
+    // Check user components before doing anything else
+    await CheckComponents();
+
     let acToken = JSON.parse(localStorage.getItem('accessToken')),
         headerData = {
             headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${acToken.value}`
+                Authorization: `Bearer ${acToken.value}`,
+                'Content-Type': 'application/json'
             }
         };
         
     userStruct.CurrentUserProfile = await axios.get('https://api.spotify.com/v1/me', headerData);
+
+    // Load playback state once before going into recurisve loop below
+    let playbackState = await axios.get('https://api.spotify.com/v1/me/player', headerData);
+    if (playbackState.data.is_playing) {
+        document.getElementById('playbackMixerInteract').src = '../assets/ico/pause.webp';
+    };
 
     // First pass on user load
     UpdatePlaybackItem(headerData);
@@ -197,6 +215,9 @@ const LoadUser = async (authCode) => {
 
 // Load user content like user playlists and favourite tracks
 const LoadContent = async () => {
+
+    // Check user components before doing anything else
+    await CheckComponents();
 
     let acToken = JSON.parse(localStorage.getItem('accessToken')),
         headerData = {
@@ -237,6 +258,7 @@ const LoadContent = async () => {
 
     // Create new element for each affinitised artist
     for (let AffinityArtist of ArtistAffinity.data.items) {
+
         let artistImage = document.createElement('img');
             artistImage.id = 'item';
             artistImage.src = AffinityArtist.images[0].url;
@@ -246,30 +268,11 @@ const LoadContent = async () => {
 
     // Create new element for each affinitised track
     for (let AffinityTrack of TracksAffinity.data.items) {
+
         let trackImage = document.createElement('img');
             trackImage.id = 'item';
             trackImage.src = AffinityTrack.album.images[0].url;
             document.querySelector('#items').appendChild(trackImage);
-    };
-
-    // Create new element for each user album
-    for (let item of UserAlbums.data.items) {
-        if (item.album.album_type == 'album') {
-            
-            let albumImageForMoodBoard = document.createElement('img');
-                albumImageForMoodBoard.id = 'item';
-                albumImageForMoodBoard.src = item.album.images[0].url;
-                document.querySelector(`#items`).appendChild(albumImageForMoodBoard);
-
-            let albumImageForPlaylists = document.createElement('img');
-                albumImageForPlaylists.id = 'playlist';
-                albumImageForPlaylists.src = item.album.images[0].url;
-                document.querySelector(`#playlistGrid`).appendChild(albumImageForPlaylists);
-                albumImageForPlaylists.addEventListener('click', () => {
-                    LoadPlaylistContent(item.album, headerData);
-                });
-
-        };
     };
 
     // Create new element for each user playlist
@@ -289,13 +292,24 @@ const LoadContent = async () => {
             });
     };
 
-    setTimeout(() => {
-        navbarIcon.classList.remove('navBarIconAnim'); // Stop loadig animation
-    }, 1200);
+    // Create new element for each user album
+    for (let item of UserAlbums.data.items) {
+        if (item.album.album_type == 'album') {
+            
+            let albumImageForMoodBoard = document.createElement('img');
+                albumImageForMoodBoard.id = 'item';
+                albumImageForMoodBoard.src = item.album.images[0].url;
+                document.querySelector(`#items`).appendChild(albumImageForMoodBoard);
 
-    document.getElementById('btnPauseMusic').addEventListener('click', () => {
-        PauseMusic(headerData);
-    });
+            let albumImageForPlaylists = document.createElement('img');
+                albumImageForPlaylists.id = 'playlist';
+                albumImageForPlaylists.src = item.album.images[0].url;
+                document.querySelector(`#playlistGrid`).appendChild(albumImageForPlaylists);
+                albumImageForPlaylists.addEventListener('click', () => {
+                    LoadPlaylistContent(item.album, headerData);
+                });
+        };
+    };
 };
 
 
@@ -311,17 +325,22 @@ const LoadPlaylistContent = async (playlist, headerData) => {
         rt = PlaylistTracks.data.items;
         
     for (let item in rt) {
-        log(rt[item].duration_ms/1000/60);
+
         let topSeperator = document.createElement('hr'),
             track = document.createElement('div'),
-            trackArtist = document.createElement('div');
+            trackArtist = document.createElement('div'),
+            trackLength = document.createElement('div'),
+            trackLengthArr = (rt[item].track.duration_ms / 1000 / 60).toFixed(2).split('.'); // arr [ Minutes , Seconds ]
             
         topSeperator.classList.add('trackBreaker');
 
         trackArtist.id = 'trackArtist';
         track.id = 'track';
+        trackLength.id = 'trackLength';
         track.innerHTML = rt[item].name || rt[item].track.name;
+        trackLength.innerHTML = `${trackLengthArr[0]}:${trackLengthArr[1]}`;
 
+        // Add arists and append to string with commas accordingly
         for (let artist of  rt[item].artists || rt[item].track.artists) {
             if (!trackArtist.innerHTML) {
                 trackArtist.innerHTML += artist.name;
@@ -331,6 +350,8 @@ const LoadPlaylistContent = async (playlist, headerData) => {
             };
         };
 
+        // Append child DOM content to parent DOM content
+        track.appendChild(trackLength);
         track.appendChild(trackArtist);
         track.appendChild(topSeperator);
         document.querySelector('#playlistContent').appendChild(track);
@@ -340,15 +361,15 @@ const LoadPlaylistContent = async (playlist, headerData) => {
 
 (async () => {
 
-    // Create events for HTML elements
-    InitializeEvents();
-
     // OAuth Flow
     await OAuthFlow();
+
+    // Create events for HTML elements
+    InitializeEvents();
 
 })()
 .catch (error => {
     console.error(error);
 });
 
-export { userStruct, baseUri, authCode };
+export { userStruct, baseUri, authCode, CheckComponents };

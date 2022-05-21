@@ -1,7 +1,6 @@
 import { AnimateScene } from './Effects';
 import { userStruct, baseUri  } from '../user.js';
-
-var log = console.log.bind(console);
+import { PauseMusic } from './Helpers';
 
 const InitializeEvents = () => {
 
@@ -26,18 +25,6 @@ const InitializeEvents = () => {
 
         userStruct.objs.currView.style.display = 'none';
         let element = document.getElementById('playlists');
-            element.style.display = 'block';
-            userStruct.objs.currView = element;
-            userStruct.isAnimationPlaying = false;
-
-        document.getElementById('playlistGrid').style.display = 'block';
-        document.getElementById('playlistContent').style.display = 'none';
-    });
-
-    document.getElementById('btnPlayer').addEventListener('click', () => {
-
-        userStruct.objs.currView.style.display = 'none';
-        let element = document.getElementById('player');
             element.style.display = 'block';
             userStruct.objs.currView = element;
             userStruct.isAnimationPlaying = false;
@@ -88,6 +75,11 @@ const InitializeEvents = () => {
             window.location.reload();
         };
 
+    });
+
+    // Toggle mixer play / pause button
+    document.getElementById('playbackMixerInteract').addEventListener('click', () => {
+        PauseMusic();
     });
 
 };
