@@ -1,7 +1,8 @@
 import { CheckComponents } from '../user';
 
 let currentItemName = document.getElementById('currPlayingItemName'),
-    currentAristInfo = document.getElementById('currPlayingItemAuthor');
+    currentAristInfo = document.getElementById('currPlayingItemAuthor'),
+    log = console.log.bind(console);
 
 const UpdatePlaybackItem = async (headerData) => {
 
