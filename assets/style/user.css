@@ -43,6 +43,7 @@
     margin-left: 10px;
     width: 37px;
     filter: invert(1);
+    cursor: pointer;
 }
 
 #playbackMixerTrackName {
