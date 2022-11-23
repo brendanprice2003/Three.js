@@ -1,4 +1,4 @@
-# Spotify API App
+# Spotify Web App
 
 [Spotify Web App](https://spotify.brendanprice.xyz/)
 
