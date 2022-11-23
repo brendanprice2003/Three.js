@@ -1,6 +1,6 @@
 # Spotify Web App
 
-[Spotify Web App](https://spotify.brendanprice.xyz/)
+### [Open Spotify Web App](https://spotify.brendanprice.xyz/)
 
 ### SETUP
 
